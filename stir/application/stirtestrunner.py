@@ -14,11 +14,10 @@ class StirTestRunner(object):
         pass
 
     def load(self, testcase, host):
-        if testcase.find(".py") != -1:
-            script = testcase
-        else:
-            script = testcase + ".py"
+        if testcase.find(".py") != -1: script = testcase
+        else: script = testcase + ".py"
         path = os.path.join(host, script)
+
         if not os.path.exists(path):
             raise TestRunnerError("%s is not exists." % (path))
         name = script[:script.find(".")]
@@ -33,9 +32,10 @@ class StirTestRunner(object):
             L.warning(type(e).__name__ + ": " + str(e))
             return False
 
-    def execute(self, script, host, v=2):
+    def execute(self, script, package, host):
         if not os.path.exists(host):
             raise TestRunnerError("%s is not exists." % (host))
+        if not package == None: host = os.path.join(host, package)
         sys.path.append(host)
 
         suite = unittest.TestSuite()
@@ -49,14 +49,14 @@ class StirTestRunner(object):
         unittest.TextTestRunner(verbosity=v).run(suite)
         sys.path.remove(host)
 
-    def execute_with_report(self, script, host, output):
+    def execute_with_report(self, script, package, host, output):
         if not os.path.exists(host):
             raise TestRunnerError("%s is not exists." % (host))
+        if not package == None: host = os.path.join(host, package)
         sys.path.append(host)
 
         if not os.path.exists(output):
             raise TestRunnerError("%s is not exists." % (output))
-
         suite = unittest.TestSuite()
         loader = unittest.TestLoader()
         module = self.load(script, host)

@@ -1,1 +1,1 @@
-from stir.script.stirtestcase import StirTestCase
+from stir.script.stirtestscript import StirTestCase

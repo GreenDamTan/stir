@@ -31,7 +31,6 @@ class StirTestCase(unittest.TestCase):
                 if fdn.endswith(".pyc") or fdn.endswith(".py"): pass
                 elif fdn.endswith("__pycache__"): pass
                 else:
-                    #L.info(fdn)
                     module = importlib.import_module("%s.service" % fdn)
                     cls.service[module.NAME] = module.FACTORY
             except Exception as e:
@@ -47,7 +46,8 @@ class StirTestCase(unittest.TestCase):
         return cls.config[name]
 
     def __parse(self):
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
         parser = self.arg_parse(parser)
 
@@ -56,8 +56,8 @@ class StirTestCase(unittest.TestCase):
             self.set("args.%s" % k, v)
 
     def arg_parse(self, parser):
-        parser.add_argument(action='store', dest="testcase",
-                            help='TestCase Name.')
+        # parser.add_argument(action='store', dest="package", required=True, help="TestCase Name")
+        # parser.add_argument("-p", "--package", action='store', dest="package", required=False, help="TestCase Package Name")
         return parser
 
     @classmethod
