@@ -62,15 +62,19 @@ class TestCase_Base(testcase_adb.TestCase_Android,
     def tap(self, target, box=None, threshold=0.2, count=10, _id=None):
         result = self.find(target, box, count, id=_id)
         if result != None:
-            L.info(self._tap(result, threshold))
+            self._tap(result, threshold)
             return True
         else: return False
 
     def find_all(self, target, box=None, count=10, id=None):
         name, bounds = P.search(self.get_base(target))
         if id != None: name = name % str(id)
-        w = int(self.adb.get().MINICAP_WIDTH)
-        h = int(self.adb.get().MINICAP_HEIGHT)
+        if self.adb.get().ROTATE == "0":
+            w = int(self.adb.get().MINICAP_HEIGHT)
+            h = int(self.adb.get().MINICAP_WIDTH)
+        else:
+            w = int(self.adb.get().MINICAP_WIDTH)
+            h = int(self.adb.get().MINICAP_HEIGHT)
         if box == None: box = self.__box(w, h, bounds)
         res = []
         for f in glob.glob(os.path.join(self.get_base(target), name)):
@@ -81,8 +85,12 @@ class TestCase_Base(testcase_adb.TestCase_Android,
     def find(self, target, box=None, count=10, id=None):
         name, bounds = P.search(self.get_base(target))
         if id != None: name = name % str(id)
-        w = int(self.adb.get().MINICAP_WIDTH)
-        h = int(self.adb.get().MINICAP_HEIGHT)
+        if self.adb.get().ROTATE == "0":
+            w = int(self.adb.get().MINICAP_HEIGHT)
+            h = int(self.adb.get().MINICAP_WIDTH)
+        else:
+            w = int(self.adb.get().MINICAP_WIDTH)
+            h = int(self.adb.get().MINICAP_HEIGHT)
         if box == None: box = self.__box(w, h, bounds)
         for f in glob.glob(os.path.join(self.get_base(target), name)):
             result = self.proc.search_pattern(os.path.join(self.get_base(target), f), box, count)
@@ -102,28 +110,29 @@ class TestCase_Base(testcase_adb.TestCase_Android,
         if result == False: self.minicap_screenshot("failed.png")
         return result
 
-    def get_base(self, target, reference):
+    def get_base(self, target):
         try:
-            return os.path.join(TMP_REFERENCE_DIR, reference, target)
+            if self.get("args.package") == None:
+                return os.path.join(TMP_REFERENCE_DIR, target)
+            else:
+                return os.path.join(TMP_REFERENCE_DIR, self.get("args.package"), target)
         except Exception as e:
             L.warning(e); raise e
 
     def _tap(self, result, random=True, threshold=0.2):
         if random:
-            if self.adb.get().ROTATE == "90":
-                x = self.normalize_w(result.x) + self.randomize(result.width, threshold)
-                y = self.normalize_h(result.y) + self.randomize(result.height, threshold)
-            else:
-                x = self.normalize_h(result.y) + self.randomize(result.height, threshold)
-                y = int(self.adb.get().WIDTH) - (self.normalize_w(result.x) + self.randomize(result.width, threshold))
+            x = self.normalize_w(result.x) + self.randomize(result.width, threshold)
+            y = self.normalize_h(result.y) + self.randomize(result.height, threshold)
         else:
-            if self.adb.get().ROTATE == "90":
-                x = self.normalize_w(result.x)
-                y = self.normalize_h(result.y)
-            else:
-                x = self.normalize_h(result.y)
-                y = int(self.adb.get().WIDTH) - (self.normalize_w(result.x))
-        return self.adb.tap(x, y)
+            x = self.normalize_w(result.x)
+            y = self.normalize_h(result.y)
+        self.adb.tap(x, y)
+
+    def _swipe(self, result, random=True, threshold=0.2):
+        x1 = self.normalize_w(result.x); x2 = self.normalize_w(result.x + result.width)
+        y1 = self.normalize_h(result.y); y2 = self.normalize_h(result.y + result.height)
+        cmd = "swipe %s %s %s %s" % (str(x1), str(y1), str(x2), str(y2))
+        return self.adb.input(cmd)
 
     def normalize(self, base, real, virtual):
         return int(base * real / virtual)

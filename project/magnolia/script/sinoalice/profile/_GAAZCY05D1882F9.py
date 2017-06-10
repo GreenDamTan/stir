@@ -1,7 +1,11 @@
 import os
 import sys
 
-import android_base
+PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+if not PATH in sys.path:
+    sys.path.insert(0, PATH)
+
+from magnolia.conf import android_base
 
 class _GAAZCY05D1882F9(android_base.Android):
     SERIAL = "GAAZCY05D1882F9"

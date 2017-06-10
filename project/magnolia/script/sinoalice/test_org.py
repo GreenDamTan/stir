@@ -16,17 +16,11 @@ class TestCase(testcase_normal.TestCase):
 
     def test_1(self):
         L.info("*** Capture ***")
-        """
         try:
             self.minicap_start(); time.sleep(2)
-            L.info(self.adb._adb.uninstall(self.get("sinoalice.uninstall"))); time.sleep(4)
-            cmd = "start -a android.intent.action.VIEW -d %s" % (self.get("sinoalice.store"))
-            L.info(self.adb.am(cmd)); time.sleep(2)
-            self.search("store"); self.tap("store\\install")
-            while not self.search("store\\open"): self.sleep()
-            self.tap("store\\open"); time.sleep(10)
-            while not self.search("entrance"): self.sleep()
-            self.tap("entrance\\start"); time.sleep(2)
+            self.assertTrue(self.reinstall()); time.sleep(2)
+            self.assertTrue(self.maintenance())
+            #self.tap("entrance\\start"); time.sleep(2)
             while not self.search("entrance\\terms"): self.sleep()
             self.tap("entrance\\terms")
             while not self.search("gacha\\initial"):
@@ -60,7 +54,7 @@ class TestCase(testcase_normal.TestCase):
         except Exception as e:
             self.minicap_finish(); time.sleep(2)
             self.minicap_create_video()
-        """
+            self.fail()
 
     @classmethod
     def tearDownClass(cls):

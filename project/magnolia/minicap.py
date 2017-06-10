@@ -2,6 +2,7 @@ import os
 import io
 import sys
 import time
+import glob
 import threading
 from Queue import Queue
 
@@ -25,7 +26,7 @@ class PatternMatchObject(object):
         return "PatternMatchObject()"
 
     def __str__(self):
-        return "Target, Box : %s, %s" % (self.target, self.box)
+        return "Target, Box : %s, %s" % (os.path.basename(self.target), self.box)
 
 class MinicapProc(object):
     def __init__(self, parent, debug=False):
@@ -58,10 +59,16 @@ class MinicapProc(object):
         return cv2.imwrite(filename, img_cv)
 
     def __save_evidence(self, number, data):
+        if number < 10: number = "0000%s" % str(number)
+        elif number < 100: number = "000%s" % str(number)
+        elif number < 1000: number = "00%s" % str(number)
+        elif number < 10000: number = "0%s" % str(number)
+        else: number = str(number)
         self.__save_cv(os.path.join(TMP_EVIDENCE_DIR, "image_%s.png" % number), data)
 
     def search_pattern(self, target, box=None, timeout=5):
         self._pattern_match = PatternMatchObject(target, box)
+        #L.info(self._pattern_match)
         for _ in xrange(timeout):
             result = self.patternmatch_result.get()
             if result != None: break;

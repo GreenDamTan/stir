@@ -76,7 +76,7 @@ class AndroidBase(object):
 
     def __exec_bg(self, cmd, timeout=TIMEOUT, debug=False):
         L.debug(cmd)
-        run_bg(cmd, timeout=timeout, debug=debug)
+        run_bg(cmd, debug=debug)
 
     def _target(self):
         if not self.WIFI:
@@ -194,11 +194,11 @@ class Android(object):
     def pull(self, src, dst):
         return self._adb.pull(src, dst)
 
-    def install(self, application, timeout=TIMEOUT):
-        return self._adb.install(application, timeout=timeout)
+    def install(self, application):
+        return self._adb.install(application)
 
-    def uninstall(self, application, timeout=TIMEOUT):
-        return self._adb.uninstall(application, timeout=timeout)
+    def uninstall(self, application):
+        return self._adb.uninstall(application)
 
     def forward(self, cmd):
         if "forward" in cmd:
@@ -281,6 +281,7 @@ if __name__ == '__main__':
     a = Android("BH9037HP5U")
     print(a.get().SERIAL)
     print(a.rotate())
+    a.tap(527, 804)
     #a.invoke("com.dmm.dmmlabo.kancolle/.AppEntry")
     #try:
     #    a.snapshot("screen.png", os.path.dirname(os.path.abspath(__file__)))
