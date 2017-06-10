@@ -1,0 +1,1 @@
+from stir.application.stirtestrunner import StirTestRunner
