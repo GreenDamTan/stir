@@ -33,7 +33,6 @@ class TestCase(testcase_normal.TestCase):
             self.assertTrue(self.gacha()); time.sleep(2)
             self.assertTrue(self.inherit())
             self.minicap_finish(); time.sleep(2)
-            self.minicap_create_video()
         except Exception as e:
             L.warning(type(e).__name__ + ": " + str(e))
             #L.warning(traceback.print_exc())
