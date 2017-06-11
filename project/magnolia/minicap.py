@@ -68,10 +68,11 @@ class MinicapProc(object):
 
     def search_pattern(self, target, box=None, timeout=5):
         self._pattern_match = PatternMatchObject(target, box)
-        #L.info(self._pattern_match)
         for _ in xrange(timeout):
             result = self.patternmatch_result.get()
-            if result != None: break;
+            if result != None:
+                L.info(self._pattern_match)
+                break;
         self._pattern_match = None
         return result
 

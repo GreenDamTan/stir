@@ -20,38 +20,23 @@ class TestCase(testcase_normal.TestCase):
             self.minicap_start(); time.sleep(2)
             self.assertTrue(self.reinstall()); time.sleep(2)
             self.assertTrue(self.maintenance())
-            #self.tap("entrance\\start"); time.sleep(2)
-            while not self.search("entrance\\terms"): self.sleep()
-            self.tap("entrance\\terms")
-            while not self.search("gacha\\initial"):
-                self._tap(POINT(0, 0,
-                    int(self.adb.get().MINICAP_WIDTH),
-                    int(self.adb.get().MINICAP_HEIGHT)))
-                #self.sleep()
-            self.tap("gacha\\initial")
-            while not self.search("gacha\\start"): self.sleep()
-            box = POINT(int(self.adb.get().MINICAP_WIDTH) / 2,
-                        int(self.adb.get().MINICAP_HEIGHT) * 0.2,
-                        0,
-                        int(self.adb.get().MINICAP_HEIGHT) * 0.6)
-            L.info(self._swipe(box))
-            while not self.search("gacha\\open"):
-                self._tap(POINT(0, 0,
-                    int(self.adb.get().MINICAP_WIDTH),
-                    int(self.adb.get().MINICAP_HEIGHT)))
-                #self.sleep()
-            self.tap("gacha\\open"); self.sleep(2)
-            while not self.search("basic\\ok"):
-                self._tap(POINT(0, 0,
-                    int(self.adb.get().MINICAP_WIDTH),
-                    int(self.adb.get().MINICAP_HEIGHT)))
-                #self.sleep()
-            self.minicap_screenshot("initial_gacha.png"); time.sleep(2)
-            self.tap("basic\\ok"); self.sleep(2)
-            time.sleep(20)
-            self.minicap_screenshot(); time.sleep(2)
-            self.minicap_finish()
+            self.assertTrue(self.terms())
+            self.assertTrue(self.initial_gacha())
+            self.assertTrue(self.name())
+            self.assertTrue(self.download())
+            self.assertTrue(self.select()); time.sleep(5)
+            self.assertTrue(self.first_sweep()); time.sleep(5)
+            self.assertTrue(self.message_skip())
+            self.assertTrue(self.box()); time.sleep(2)
+            self.assertTrue(self.login_bonus()); time.sleep(2)
+            self.assertTrue(self.box()); time.sleep(5)
+            self.assertTrue(self.gacha()); time.sleep(2)
+            self.assertTrue(self.inherit())
+            self.minicap_finish(); time.sleep(2)
+            self.minicap_create_video()
         except Exception as e:
+            L.warning(type(e).__name__ + ": " + str(e))
+            #L.warning(traceback.print_exc())
             self.minicap_finish(); time.sleep(2)
             self.minicap_create_video()
             self.fail()
