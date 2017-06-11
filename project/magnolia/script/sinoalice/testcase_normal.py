@@ -59,6 +59,7 @@ class TestCase(testcase.TestCase_Base):
         self.tap("gacha\\open"); self.sleep(2)
         while not self.search("basic\\ok"):
             self._tap(POINT(0, 0, w, 10)) #; self.sleep()
+            if self.tap("basic\\ad"): self.sleep()
         self.minicap_screenshot(filename); time.sleep(2)
         return self.tap("basic\\ok")
 
