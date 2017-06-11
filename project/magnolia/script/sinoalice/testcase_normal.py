@@ -50,6 +50,7 @@ class TestCase(testcase.TestCase_Base):
         return self.__gacha("initial_gacha.png")
 
     def __gacha(self, filename="capture.png"):
+        count = 1
         w = int(self.adb.get().MINICAP_WIDTH)
         h = int(self.adb.get().MINICAP_WIDTH)
         while not self.search("gacha\\start"): self.sleep()
@@ -58,6 +59,9 @@ class TestCase(testcase.TestCase_Base):
         while not self.search("gacha\\open"): self.sleep()
         self.tap("gacha\\open"); self.sleep(2)
         while not self.search("basic\\ok"):
+            while self.search("gacha\\rare"):
+                self.minicap_screenshot("rare_%s_%s" % (str(count), filename))
+                count += 1; self.tap("gacha\\rare"); self.sleep(4)
             self._tap(POINT(0, 0, 10, 10)) #; self.sleep()
             if self.tap("basic\\ad"): self.sleep()
         self.minicap_screenshot(filename); time.sleep(2)
