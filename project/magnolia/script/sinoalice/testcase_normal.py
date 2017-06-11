@@ -148,6 +148,6 @@ class TestCase(testcase.TestCase_Base):
         self.tap("menu\\inherit\\password"); self.sleep(4)
         self.adb.text(self.get("sinoalice.password")); self.sleep()
         self.tap("name\\end"); time.sleep(4)
-        self.tap("basic\\ok"); time.sleep(2)
+        self.tap("basic\\ok"); time.sleep(6)
         self.minicap_screenshot("inherit.png"); time.sleep(2)
         return True
